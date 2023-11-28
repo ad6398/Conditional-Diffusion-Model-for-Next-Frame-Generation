@@ -55,7 +55,7 @@ test:
 
 data:
   dataset: "SegmentationMaskDataset"
-  image_size: 64
+  image_size: 240
   channels: 1
   logit_transform: false
   uniform_dequantization: false
