@@ -6,6 +6,7 @@ import torch
 import torch.nn as nn
 import torch.utils.data as data
 
+from torch.utils.data import Dataset
 
 
 class SegmentationMaskDataset(Dataset):
@@ -23,7 +24,7 @@ class SegmentationMaskDataset(Dataset):
         self.data_dir = os.path.join(root_dir, split)
         self.split = split
         self.per_vid_data_len = 22 - n_frames + 1
-        for v in os.listdir():
+        for v in os.listdir(self.data_dir):
             if os.path.isdir(os.path.join(self.data_dir, v)):
                 self.map_idx_image_folder.append(os.path.join(self.data_dir, v))
         
