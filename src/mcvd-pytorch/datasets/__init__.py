@@ -14,6 +14,7 @@ from datasets.bair import BAIRDataset
 from datasets.kth import KTHDataset
 from datasets.cityscapes import CityscapesDataset
 from datasets.ucf101 import UCF101Dataset
+from datasets.semantic_seg import SegmentationMaskDataset
 from torch.utils.data import Subset
 
 
@@ -56,6 +57,11 @@ def get_dataset(data_path, config, video_frames_pred=0, start_at=0):
         test_dataset = CIFAR10(data_path, train=False, download=True,
                                transform=test_transform)
 
+    elif config.data.dataset == 'SegmentationMaskDataset':
+        seq_len = config.data.num_frames_cond + getattr(config.data, "num_frames_future", 0) + video_frames_pred
+        dataset = SegmentationMaskDataset(root_dir= data_path, split= 'train', n_frames= seq_len )
+        test_dataset = SegmentationMaskDataset(root_dir= data_path, split= 'val', n_frames= seq_len )
+        
     elif config.data.dataset.upper() == 'CELEBA':
         if config.data.random_flip:
             dataset = CelebA(

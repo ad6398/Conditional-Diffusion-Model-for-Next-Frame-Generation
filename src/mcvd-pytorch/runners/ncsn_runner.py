@@ -108,7 +108,7 @@ def conditioning_fn(config, X, num_frames_pred=0, prob_mask_cond=0.0, prob_mask_
 
     cond = config.data.num_frames_cond
     train = config.data.num_frames
-    pred = num_frames_pred
+    pred = num_frames_pred # same as config.data.num_frames
     future = getattr(config.data, "num_frames_future", 0)
 
     # Frames to train on / sample

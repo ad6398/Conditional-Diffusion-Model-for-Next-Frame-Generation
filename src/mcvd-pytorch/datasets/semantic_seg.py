@@ -39,4 +39,4 @@ class SegmentationMaskDataset(Dataset):
         all_frame_mask = torch.FloatTensor(np.load(os.path.join(self.map_idx_image_folder[video_num], 'mask.npy'))).long()[start_idx: start_idx + self.n_frames]
         all_frame_mask[all_frame_mask >= 49] = 0 # set some noise to background
         
-        return all_frame_mask
+        return all_frame_mask, torch.tensor(1) # return dummy one as target
