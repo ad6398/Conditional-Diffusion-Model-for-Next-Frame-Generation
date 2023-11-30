@@ -34,12 +34,12 @@ class SegmentationMaskDataset(Dataset):
     def resize_to_224(self, mask):
         # pad 40 x 240 up and down
         zeros = torch.zeros((self.n_frames,40,240), dtype = torch.long)
-        mask = torch.concatenate((zeros,mask,zeros), dim= 1)
+        mask = torch.cat((zeros,mask,zeros), dim= 1)
         return mask
     
     def __getitem__(self, idx):
         # if self.split == "train": # return initital 11 frame only
-        video_num = (idx + 1) // self.per_vid_data_len
+        video_num = idx // self.per_vid_data_len
         start_idx = idx % self.per_vid_data_len
         
         all_frame_mask = torch.FloatTensor(np.load(os.path.join(self.map_idx_image_folder[video_num], 'mask.npy'))).long()[start_idx: start_idx + self.n_frames]
