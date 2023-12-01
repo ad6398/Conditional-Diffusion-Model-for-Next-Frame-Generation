@@ -349,6 +349,7 @@ class NCSNRunner():
 
         # Initial samples
         n_init_samples = min(36, self.config.training.batch_size)
+        #print("n_init_samp")
         init_samples_shape = (n_init_samples, self.config.data.channels*self.config.data.num_frames, self.config.data.image_size, self.config.data.image_size)
         if self.version == "SMLD":
             init_samples = torch.rand(init_samples_shape, device=self.config.device)
@@ -367,6 +368,7 @@ class NCSNRunner():
         self.total_train_time = 0
         self.start_time = time.time()
 
+        #print("just before train")
         early_end = False
         for epoch in range(start_epoch, self.config.training.n_epochs):
             for batch, (X, y) in enumerate(dataloader):
@@ -379,11 +381,14 @@ class NCSNRunner():
                 # Data
                 X = X.to(self.config.device)
                 X = data_transform(self.config, X)
+                #print("Getting data")
                 X, cond, cond_mask = conditioning_fn(self.config, X, num_frames_pred=self.config.data.num_frames,
                                                      prob_mask_cond=getattr(self.config.data, 'prob_mask_cond', 0.0),
                                                      prob_mask_future=getattr(self.config.data, 'prob_mask_future', 0.0),
                                                      conditional=conditional)
 
+                #print("post condtn - func")
+           
                 # Loss
                 itr_start = time.time()
                 loss = anneal_dsm_score_estimation(scorenet, X, labels=None, cond=cond, cond_mask=cond_mask,
@@ -393,12 +398,13 @@ class NCSNRunner():
                                                    all_frames=getattr(self.config.model, 'output_all_frames', False))
                 # tb_logger.add_scalar('loss', loss, global_step=step)
                 # tb_hook()
-
+                #print("post-loss-cal")
                 # Optimize
                 loss.backward()
+                #print("post-loss-back")
                 grad_norm = torch.nn.utils.clip_grad_norm_(scorenet.parameters(), getattr(self.config.optim, 'grad_clip', np.inf))
                 optimizer.step()
-
+                #print("optimise step done")
                 # Training time
                 itr_time = time.time() - itr_start
                 self.total_train_time += itr_time
@@ -2716,7 +2722,8 @@ class NCSNRunner():
     def init_meters(self):
         success = self.load_meters()
         if not success:
-            self.epochs = RunningAverageMeter()
+            #print("Inside not success")
+            self.epochs = RunningAverageMeter() 
             self.losses_train, self.losses_test = RunningAverageMeter(), RunningAverageMeter()
             self.lr_meter, self.grad_norm = RunningAverageMeter(), RunningAverageMeter()
             self.time_train, self.time_elapsed = RunningAverageMeter(), RunningAverageMeter()
