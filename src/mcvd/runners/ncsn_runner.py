@@ -1587,8 +1587,9 @@ class NCSNRunner():
                     vid_jacc.append(0)
             else:
                 # Calculate MSE, PSNR, SSIM
-                jaccard = torchmetrics.JaccardIndex(task="multiclass", num_classes=49)
+                jaccard = torchmetrics.JaccardIndex(task="multiclass", num_classes=49, ignore_index= 0)
                 def calculate_jacc(pred, real):
+                    
                     return jaccard(pred, real)
                     
 
@@ -1600,10 +1601,13 @@ class NCSNRunner():
                         pred_ij = pred[ii, (self.config.data.channels*jj):(self.config.data.channels*jj + self.config.data.channels), :, :]
                         real_ij = real[ii, (self.config.data.channels*jj):(self.config.data.channels*jj + self.config.data.channels), :, :]
                         mse += F.mse_loss(real_ij, pred_ij) 
+                        if(ii==0 and jj == 0):
+                            print("pred frame val: ",torch.min(pred_ij), torch.max(pred_ij))
+                            print("real frame val: ",torch.min(real_ij), torch.max(real_ij))
 
                         # AD - add jacarad
 
-                        avg_jacc += calculate_jacc(pred_ij, rea_ij)
+                        avg_jacc += calculate_jacc(pred_ij, real_ij)
 
                         pred_ij_pil = Transforms.ToPILImage()(pred_ij).convert("RGB")
                         real_ij_pil = Transforms.ToPILImage()(real_ij).convert("RGB")
@@ -2215,6 +2219,7 @@ class NCSNRunner():
         # Calc MSE, PSNR, SSIM, LPIPS
         mse_list = np.array(vid_mse).reshape(-1, preds_per_test).min(-1)
         jacc_list = np.array(vid_jacc).reshape(-1, preds_per_test).min(-1)
+        print("mse and jacc shap:", mse_list.shape, jacc_list.shape)
         psnr_list = (10 * np.log10(1 / np.array(vid_mse))).reshape(-1, preds_per_test).max(-1)
         ssim_list = np.array(vid_ssim).reshape(-1, preds_per_test).max(-1)
         lpips_list = np.array(vid_lpips).reshape(-1, preds_per_test).min(-1)
