@@ -48,6 +48,7 @@ from models.ema import EMAHelper
 from models.fvd.fvd import get_fvd_feats, frechet_distance, load_i3d_pretrained
 from models.unet import UNet_SMLD, UNet_DDPM
 import torchmetrics
+import wandb
 #import pdb; pdb.set_trace()
 
 __all__ = ['NCSNRunner']
@@ -204,6 +205,7 @@ class NCSNRunner():
         args.log_sample_path = os.path.join(args.log_path, 'samples')
         os.makedirs(args.log_sample_path, exist_ok=True)
         self.get_mode()
+        self.wandb_run = wandb.init(project= "DL-project", config = self.config )
 
     def get_mode(self):
         self.condf, self.condp = self.config.data.num_frames_cond, getattr(self.config.data, "prob_mask_cond", 0.0)
@@ -420,6 +422,7 @@ class NCSNRunner():
                     logging.info("elapsed: {}, train time: {:.04f}, mem: {:.03f}GB, GPUmem: {:.03f}GB, step: {}, lr: {:.06f}, grad: {:.04f}, loss: {:.04f}".format(
                         str(datetime.timedelta(seconds=(time.time() - self.start_time)) + datetime.timedelta(seconds=self.time_elapsed_prev*3600))[:-3],
                         self.time_train.val, get_proc_mem(), get_GPU_mem(), step, lr, grad_norm, loss.item()))
+                    wandb.log({"steps": step, "grad": grad_norm, "train_loss": loss.item(), "lr": lr })
 
                 if self.config.model.ema:
                     ema_helper.update(scorenet)
@@ -484,7 +487,7 @@ class NCSNRunner():
                     logging.info("elapsed: {}, step: {}, mem: {:.03f}GB, GPUmem: {:.03f}GB, test_loss: {:.04f}".format(
                         str(datetime.timedelta(seconds=(time.time() - self.start_time)) + datetime.timedelta(seconds=self.time_elapsed_prev*3600))[:-3],
                         step, get_proc_mem(), get_GPU_mem(), test_dsm_loss.item()))
-
+                    wandb.log({"steps", step, "test_loss": test_dsm_loss.item() })
                     # Plot graphs
                     try:
                         plot_graphs_process.join()
@@ -2312,6 +2315,8 @@ class NCSNRunner():
             elapsed = str(datetime.timedelta(seconds=(time.time() - self.start_time)))[:-3]
         format_p = lambda dd : ", ".join([f"{k}:{v:.4f}" if k != 'ckpt' and k != 'preds_per_test' and k != 'time' else f"{k}:{v:7d}" if k == 'ckpt' else f"{k}:{v:3d}" if k == 'preds_per_test' else f"{k}:{v}" for k, v in dd.items()])
         logging.info(f"elapsed: {elapsed}, {format_p(vid_metrics)}")
+        wandb.log({'mse': avg_mse, 'mse_std': std_mse,
+                        'jacc': avg_jacc, 'jacc_std': std_jacc})
         logging.info(f"elapsed: {elapsed}, mem:{get_proc_mem():.03f}GB, GPUmem: {get_GPU_mem():.03f}GB")
 
         if train:
