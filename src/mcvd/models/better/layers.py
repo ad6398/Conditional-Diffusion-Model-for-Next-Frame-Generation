@@ -117,10 +117,11 @@ class SegLastBlock(nn.Module): # to force model to predict between 0 - 49, this 
     nn.init.zeros_(self.conv.bias)
 
   def forward(self,x):
+    bs = x.shape[0]
     x = self.conv(x)
-
-    x= x.view(self.out_planes, 49, -1 )
-    x = torch.argmax(x, dim = 1)
+    new_shape = [bs, 49, x.shape[1]//49] + list( x.shape[2:])
+    x= x.view(new_shape)
+    x = x.argmax( dim = 1)
 
     return x
 
