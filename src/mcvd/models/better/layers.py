@@ -104,7 +104,7 @@ def ncsn_conv3x3(in_planes, out_planes, stride=1, bias=True, dilation=1, init_sc
   return conv
 
 
-class SegLastBlock(nn.module): # to force model to predict between 0 - 49, this will fail for out channel > 1
+class SegLastBlock(nn.Module): # to force model to predict between 0 - 49, this will fail for out channel > 1
   def __init__(self, in_planes, out_planes, stride=1, bias=True, dilation=1, init_scale=1., padding=1):
     super().__init__()
 
@@ -113,13 +113,13 @@ class SegLastBlock(nn.module): # to force model to predict between 0 - 49, this 
                    dilation=dilation, bias=bias)
     
     
-    conv.weight.data = default_init(init_scale)(conv.weight.data.shape)
-    nn.init.zeros_(conv.bias)
+    self.conv.weight.data = default_init(init_scale)(self.conv.weight.data.shape)
+    nn.init.zeros_(self.conv.bias)
 
   def forward(self,x):
     x = self.conv(x)
 
-    x= x.view(out_planes, 49, -1 )
+    x= x.view(self.out_planes, 49, -1 )
     x = torch.argmax(x, dim = 1)
 
     return x
