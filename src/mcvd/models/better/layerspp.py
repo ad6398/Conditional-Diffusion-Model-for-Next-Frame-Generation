@@ -26,6 +26,7 @@ import functools
 
 conv1x1 = layers.ddpm_conv1x1
 conv3x3 = layers.ddpm_conv3x3
+lastSegBlock = layers.SegLastBlock
 NIN = layers.NIN
 default_init = layers.default_init
 

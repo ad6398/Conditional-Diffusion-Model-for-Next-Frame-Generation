@@ -128,7 +128,11 @@ class SegLastBlock(nn.module): # to force model to predict between 0 - 49, this 
 
 def ddpm_conv3x3(in_planes, out_planes, stride=1, bias=True, dilation=1, init_scale=1., padding=1):
   """3x3 convolution with DDPM initialization."""
-  return SegLastBlock(in_planes, out_planes, stride, bias, dilation, init_scale, padding )
+  conv = nn.Conv2d(in_planes, out_planes, kernel_size=3, stride=stride, padding=padding,
+                   dilation=dilation, bias=bias)
+  conv.weight.data = default_init(init_scale)(conv.weight.data.shape)
+  nn.init.zeros_(conv.bias)
+  return conv
 
 
   ###########################################################################

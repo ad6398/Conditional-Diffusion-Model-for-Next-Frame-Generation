@@ -106,7 +106,7 @@ class NCSNpp(nn.Module):
       conv3x3_last = functools.partial(layers3d.ddpm_conv3x3_3d, n_frames=self.num_frames)
     else:
       conv3x3 = layerspp.conv3x3
-      conv3x3_last = layerspp.conv3x3
+      conv3x3_last = layerspp.lastSegBlock
 
     if self.is3d:
       AttnBlockDown = functools.partial(layers3d.AttnBlockpp3d,
