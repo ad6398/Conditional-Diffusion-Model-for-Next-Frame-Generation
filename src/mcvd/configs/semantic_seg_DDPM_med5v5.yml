@@ -17,7 +17,7 @@ sampling:
   final_only: true
   fid: false
   ssim: true
-  fvd: true
+  fvd: false
   denoise: true
   subsample: 1000
   num_samples4fid: 10000
@@ -61,7 +61,7 @@ data:
   uniform_dequantization: false
   gaussian_dequantization: false
   random_flip: true
-  rescaled: true
+  rescaled: false
   num_workers: 2
   num_digits: 2
   step_length: 0.1
