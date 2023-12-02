@@ -33,7 +33,7 @@ class SegmentationMaskDataset(Dataset):
     
     def resize_to_224(self, mask):
         # pad 40 x 240 up and down
-        zeros = torch.zeros((self.n_frames,40,240), dtype = torch.long)
+        zeros = torch.zeros((self.n_frames,40,240))
         mask = torch.cat((zeros,mask,zeros), dim= 1)
         return mask
     
