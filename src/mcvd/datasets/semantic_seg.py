@@ -7,7 +7,7 @@ import torch.nn as nn
 import torch.utils.data as data
 
 from torch.utils.data import Dataset
-
+from PIL import Image
 
 class SegmentationMaskDataset(Dataset):
     def __init__(self, root_dir, split = 'train', n_frames = 10):
@@ -49,3 +49,55 @@ class SegmentationMaskDataset(Dataset):
         all_frame_mask = self.resize_to_224(all_frame_mask)
 
         return all_frame_mask, torch.tensor(1) # return dummy one as target
+
+
+class NextFramePredDatasets(Dataset):
+    def __init__(self, root_dir, split = 'train', mode = '5v6', tranforms = None):
+        self.map_idx_image_folder = []
+        self.mode = mode
+        self.data_dir = os.path.join(root_dir, split)
+        self.split = split
+        self.transforms = tranforms
+        for v in os.listdir(self.data_dir):
+            if os.path.isdir(os.path.join(self.data_dir, v)):
+                self.map_idx_image_folder.append(os.path.join(self.data_dir, v))
+    
+    def __len__(self):
+          return len(self.map_idx_image_folder  )
+    
+    def __getitem__(self, idx):
+
+
+        if self.mode =='5v6':
+            req_image_idx = [1 + x for x in range(0, 21, 2)]
+        
+        elif self.mode == '11v1':
+            req_image_idx = list(range(0,12))
+            req_image_idx.append(21)
+        
+        else:
+            raise Exception("mode not right for data pulling")
+
+        images = []
+
+        for i in req_image_idx:
+            img_path = os.path.join(self.map_idx_image_folder[idx], f"image_{i}.png" )
+            image = Image.open(img_path)
+
+            if self.transforms:
+                image = self.transforms(image)
+            images.append(image)
+
+        return torch.stack(images)
+    
+
+
+
+
+
+
+
+
+
+
+
