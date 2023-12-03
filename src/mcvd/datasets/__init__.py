@@ -14,11 +14,11 @@ from datasets.bair import BAIRDataset
 from datasets.kth import KTHDataset
 from datasets.cityscapes import CityscapesDataset
 from datasets.ucf101 import UCF101Dataset
-from datasets.semantic_seg import SegmentationMaskDataset
+from datasets.semantic_seg import SegmentationMaskDataset, NextFramePredDatasets
 from torch.utils.data import Subset
 
 
-DATASETS = ['CIFAR10', 'CELEBA', 'LSUN', 'FFHQ', 'IMAGENET', 'MOVINGMNIST', 'STOCHASTICMOVINGMNIST', 'BAIR', 'KTH', 'CITYSCAPES', 'UCF101', "SegmentationMaskDataset".upper()]
+DATASETS = ['CIFAR10', 'CELEBA', 'LSUN', 'FFHQ', 'IMAGENET', 'MOVINGMNIST', 'STOCHASTICMOVINGMNIST', 'BAIR', 'KTH', 'CITYSCAPES', 'UCF101', "SegmentationMaskDataset".upper(), "NextFramePredDatasets".upper()]
 
 
 def get_dataloaders(data_path, config):
@@ -61,6 +61,26 @@ def get_dataset(data_path, config, video_frames_pred=0, start_at=0):
         seq_len = config.data.num_frames_cond + getattr(config.data, "num_frames_future", 0) + video_frames_pred
         dataset = SegmentationMaskDataset(root_dir= data_path, split= 'train', n_frames= seq_len )
         test_dataset = SegmentationMaskDataset(root_dir= data_path, split= 'val', n_frames= seq_len )
+
+    elif config.data.dataset == 'NextFramePredDatasets':
+        mode = f"{config.data.num_frames_cond}v{config.data.num_frames}"
+
+        train_transform = transforms.Compose([
+            transforms.Resize(config.data.image_size, config.data.image_size),
+            transforms.RandomHorizontalFlip(p=0.5),
+            transforms.ToTensor()
+        ])
+
+        test_transform = transforms.Compose([
+            transforms.Resize(config.data.image_size, config.data.image_size),
+            transforms.ToTensor()
+        ])
+
+        dataset = NextFramePredDatasets(root_dir= data_path, split= 'unlabeled', mode= mode, tranforms= train_transform)
+        test_dataset = NextFramePredDatasets(root_dir= data_path, split= 'val', mode= mode, tranforms= test_transform)
+
+
+
 
     elif config.data.dataset.upper() == 'CELEBA':
         if config.data.random_flip:
