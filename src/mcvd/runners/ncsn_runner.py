@@ -487,7 +487,7 @@ class NCSNRunner():
                     logging.info("elapsed: {}, step: {}, mem: {:.03f}GB, GPUmem: {:.03f}GB, test_loss: {:.04f}".format(
                         str(datetime.timedelta(seconds=(time.time() - self.start_time)) + datetime.timedelta(seconds=self.time_elapsed_prev*3600))[:-3],
                         step, get_proc_mem(), get_GPU_mem(), test_dsm_loss.item()))
-                    wandb.log({"steps", step, "test_loss": test_dsm_loss.item() })
+                    wandb.log({"steps": step, "test_loss": test_dsm_loss.item() })
                     # Plot graphs
                     try:
                         plot_graphs_process.join()
@@ -1604,9 +1604,9 @@ class NCSNRunner():
                         pred_ij = pred[ii, (self.config.data.channels*jj):(self.config.data.channels*jj + self.config.data.channels), :, :]
                         real_ij = real[ii, (self.config.data.channels*jj):(self.config.data.channels*jj + self.config.data.channels), :, :]
                         mse += F.mse_loss(real_ij, pred_ij) 
-                        if(ii==0 and jj == 0):
-                            print("pred frame val: ",torch.min(pred_ij), torch.max(pred_ij))
-                            print("real frame val: ",torch.min(real_ij), torch.max(real_ij))
+                        #if(ii==0 and jj == 0):
+                            #print("pred frame val: ",torch.min(pred_ij), torch.max(pred_ij))
+                            #print("real frame val: ",torch.min(real_ij), torch.max(real_ij))
 
                         # AD - add jacarad
 
@@ -2222,7 +2222,7 @@ class NCSNRunner():
         # Calc MSE, PSNR, SSIM, LPIPS
         mse_list = np.array(vid_mse).reshape(-1, preds_per_test).min(-1)
         jacc_list = np.array(vid_jacc).reshape(-1, preds_per_test).min(-1)
-        print("mse and jacc shap:", mse_list.shape, jacc_list.shape)
+        #print("mse and jacc shap:", mse_list.shape, jacc_list.shape)
         psnr_list = (10 * np.log10(1 / np.array(vid_mse))).reshape(-1, preds_per_test).max(-1)
         ssim_list = np.array(vid_ssim).reshape(-1, preds_per_test).max(-1)
         lpips_list = np.array(vid_lpips).reshape(-1, preds_per_test).min(-1)
