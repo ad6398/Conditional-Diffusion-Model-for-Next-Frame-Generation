@@ -37,10 +37,6 @@ def save_last_frame(pred, video_num):
 
 
 
-	
-
-
-
 def main(data_path, ckpt_path):
 	device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 	scorenet, config = load_model(ckpt_path, device)
@@ -52,13 +48,13 @@ def main(data_path, ckpt_path):
 	
 	for i, test_x, test_y in enumerate(test_loader):
         #print("pred", i)
-        test_x = data_transform(config, test_x)
-        real, cond, cond_mask = conditioning_fn(config, test_x, num_frames_pred=config.data.num_frames,
-                                        prob_mask_cond=getattr(config.data, 'prob_mask_cond', 0.0),
-                                        prob_mask_future=getattr(config.data, 'prob_mask_future', 0.0))
+		test_x = data_transform(config, test_x)
+		real, cond, cond_mask = conditioning_fn(config, test_x, num_frames_pred=config.data.num_frames,
+        								prob_mask_cond=getattr(config.data, 'prob_mask_cond', 0.0),
+        								prob_mask_future=getattr(config.data, 'prob_mask_future', 0.0))
 		init = init_samples(len(real), config)
-        pred = sampler(init, scorenet, cond=cond, cond_mask=cond_mask, subsample=100, verbose=True)
-        save_last_frame(pred, test_y)
+		pred = sampler(init, scorenet, cond=cond, cond_mask=cond_mask, subsample=100, verbose=True)
+		save_last_frame(pred, test_y)
       
 	
 
