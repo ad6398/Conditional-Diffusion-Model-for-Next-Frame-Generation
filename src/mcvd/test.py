@@ -1,5 +1,5 @@
 import glob, os
-import mediapy as media
+#import mediapy as media
 import torch
 from torch.utils.data import DataLoader
 
@@ -22,7 +22,11 @@ def save_last_frame(pred, video_num):
     last_frames = pred[:, -1, :, :].view(batch_size, 1, image_width, image_height)
 
     # Convert last_frames tensor to images
-    image_transform = transforms.ToPILImage()
+    image_transform = transforms.Compose([
+        transforms.ToPILImage(),
+        transforms.Resize((160,240)),
+        transforms.ToTensor(),
+    ])
     images = [image_transform(last_frames[i]) for i in range(batch_size)]
 
     # Save images with corresponding video_num suffix
@@ -47,20 +51,20 @@ def main(data_path, ckpt_path):
                          num_workers=config.data.num_workers, drop_last=True)
 	
 	for i, test_x, test_y in enumerate(test_loader):
-		test_x = data_transform(config, test_x)
-		real, cond, cond_mask = conditioning_fn(config, test_x, num_frames_pred=config.data.num_frames,
+        #print("pred", i)
+        test_x = data_transform(config, test_x)
+        real, cond, cond_mask = conditioning_fn(config, test_x, num_frames_pred=config.data.num_frames,
                                         prob_mask_cond=getattr(config.data, 'prob_mask_cond', 0.0),
                                         prob_mask_future=getattr(config.data, 'prob_mask_future', 0.0))
-		
 		init = init_samples(len(real), config)
-		pred = sampler(init, scorenet, cond=cond, cond_mask=cond_mask, subsample=100, verbose=True)
+        pred = sampler(init, scorenet, cond=cond, cond_mask=cond_mask, subsample=100, verbose=True)
         save_last_frame(pred, test_y)
       
 	
 
 
       
-
+main( "/scratch/ak11089/final-project/raw-data-1/dataset","/scratch/ak11089/final-project//next-frame-big-5v-6/logs/checkpoint_134000.pt" )
 
 
 	
