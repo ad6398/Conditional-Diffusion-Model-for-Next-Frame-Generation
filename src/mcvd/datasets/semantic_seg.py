@@ -58,7 +58,7 @@ class ElevenVsOneFramePredDatasets(Dataset):
         self.mode = mode
         self.data_dir = os.path.join(root_dir, split)
         self.split = split
-         self.per_vid_data_len = 11
+        self.per_vid_data_len = 11
         self.transforms = tranforms
         for v in os.listdir(self.data_dir):
             if os.path.isdir(os.path.join(self.data_dir, v)):
@@ -129,6 +129,8 @@ class NextFramePredDatasets(Dataset):
         images = []
 
         pattern = re.compile(r'video_(\d+)$')
+        #video_number = int(match.group(1))
+        match = pattern.search(self.map_idx_image_folder[idx])
         video_number = int(match.group(1))
 
         for i in req_image_idx:
