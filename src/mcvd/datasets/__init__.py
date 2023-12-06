@@ -66,13 +66,13 @@ def get_dataset(data_path, config, video_frames_pred=0, start_at=0):
         mode = f"{config.data.num_frames_cond}v{config.data.num_frames}"
 
         train_transform = transforms.Compose([
-            transforms.Resize(config.data.image_size, config.data.image_size),
+            transforms.Resize((config.data.image_size, config.data.image_size)),
             transforms.RandomHorizontalFlip(p=0.5),
             transforms.ToTensor()
         ])
 
         test_transform = transforms.Compose([
-            transforms.Resize(config.data.image_size, config.data.image_size),
+            transforms.Resize((config.data.image_size, config.data.image_size)),
             transforms.ToTensor()
         ])
 

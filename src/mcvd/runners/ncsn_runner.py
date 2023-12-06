@@ -205,7 +205,7 @@ class NCSNRunner():
         args.log_sample_path = os.path.join(args.log_path, 'samples')
         os.makedirs(args.log_sample_path, exist_ok=True)
         self.get_mode()
-        self.wandb_run = wandb.init(project= "DL-project", config = self.config )
+        self.wandb_run = wandb.init(project= "DL-next-fram-5v6", config = self.config )
 
     def get_mode(self):
         self.condf, self.condp = self.config.data.num_frames_cond, getattr(self.config.data, "prob_mask_cond", 0.0)
@@ -705,6 +705,7 @@ class NCSNRunner():
                         image_grid = make_grid(pred, nrow)
 
                     save_image(image_grid, os.path.join(self.args.log_sample_path, 'image_grid_{}.png'.format(step)))
+                    #wandb.log({"samples":wandb.Image(os.path.join(self.args.log_sample_path, 'image_grid_{}.png'.format(step)))})
                     torch.save(pred, os.path.join(self.args.log_sample_path, 'samples_{}.pt'.format(step)))
 
                     del all_samples
@@ -1590,10 +1591,10 @@ class NCSNRunner():
                     vid_jacc.append(0)
             else:
                 # Calculate MSE, PSNR, SSIM
-                jaccard = torchmetrics.JaccardIndex(task="multiclass", num_classes=49, ignore_index= 0)
-                def calculate_jacc(pred, real):
+                #jaccard = torchmetrics.JaccardIndex(task="multiclass", num_classes=49, ignore_index= 0)
+                #def calculate_jacc(pred, real):
                     
-                    return jaccard(pred, real)
+                    #return jaccard(pred, real)
                     
 
                 for ii in range(len(pred)):
@@ -1610,8 +1611,9 @@ class NCSNRunner():
 
                         # AD - add jacarad
 
-                        avg_jacc += calculate_jacc(pred_ij, real_ij)
+                        #avg_jacc += calculate_jacc(pred_ij, real_ij)
 
+                        avg_jacc = 0.0
                         pred_ij_pil = Transforms.ToPILImage()(pred_ij).convert("RGB")
                         real_ij_pil = Transforms.ToPILImage()(real_ij).convert("RGB")
 

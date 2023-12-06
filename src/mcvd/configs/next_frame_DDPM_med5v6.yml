@@ -1,12 +1,12 @@
 training:
   L1: false
-  batch_size: 16
-  n_epochs: 100
+  batch_size: 80
+  n_epochs: 1000
   n_iters: 3000001
-  snapshot_freq: 500
-  snapshot_sampling: true
-  sample_freq: 500
-  val_freq: 200
+  snapshot_freq: 800
+  snapshot_sampling: false
+  sample_freq: 2000
+  val_freq: 400
   log_freq: 50
   log_all_sigmas: false
 
@@ -29,7 +29,7 @@ sampling:
   step_lr: 0.0
   n_steps_each: 0
   train: false
-  num_frames_pred: 5
+  num_frames_pred: 6
   clip_before: true
   max_data_iter: 1
   init_prev_t: -1.0 # if >0, we start next_frame at prev_frame starting with noise t=init_prev_t
@@ -55,7 +55,7 @@ test:
 
 data:
   dataset: "NextFramePredDatasets"
-  image_size: 120
+  image_size: 128
   channels: 3
   logit_transform: false
   uniform_dequantization: false
@@ -114,6 +114,6 @@ optim:
   lr: 0.0002
   warmup: 1000
   beta1: 0.9
-  amsgrad: false
+  amsgrad: true
   eps: 0.00000001
   grad_clip: 1.0

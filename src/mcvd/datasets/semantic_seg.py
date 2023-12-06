@@ -88,7 +88,7 @@ class NextFramePredDatasets(Dataset):
                 image = self.transforms(image)
             images.append(image)
 
-        return torch.stack(images)
+        return torch.stack(images), torch.tensor(1)
     
 
 

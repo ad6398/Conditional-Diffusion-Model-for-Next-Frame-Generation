@@ -1,12 +1,12 @@
 training:
   L1: false
-  batch_size: 28
-  n_epochs: 5000
-  n_iters: 300001
-  snapshot_freq: 400
+  batch_size: 32
+  n_epochs: 10000
+  n_iters: 3000001
+  snapshot_freq: 800
   snapshot_sampling: true
-  sample_freq: 400
-  val_freq: 200
+  sample_freq: 800
+  val_freq: 800
   log_freq: 50
   log_all_sigmas: false
 
@@ -19,7 +19,7 @@ sampling:
   ssim: true
   fvd: false
   denoise: true
-  subsample: 100
+  subsample: 1000
   num_samples4fid: 10000
   num_samples4fvd: 10000
   inpainting: false
@@ -54,26 +54,26 @@ test:
   batch_size: 16
 
 data:
-  dataset: "SegmentationMaskDataset"
-  image_size: 240
-  channels: 1
+  dataset: "NextFramePredDatasets"
+  image_size: 128
+  channels: 3
   logit_transform: false
   uniform_dequantization: false
   gaussian_dequantization: false
-  random_flip: true
-  rescaled: false
+  random_flip: false
+  rescaled: true
   num_workers: 4
-  num_digits: -1
+  num_digits: 2
   step_length: 0.1
   num_frames: 6
-  num_frames_cond: 11
+  num_frames_cond: 5
   num_frames_future: 0
   prob_mask_cond: 0.0
   prob_mask_future: 0.0
   prob_mask_sync: false
 
 model:
-  depth: deep
+  depth: deeper
   version: DDPM
   gamma: false
   arch: unetmore
@@ -89,18 +89,18 @@ model:
   spec_norm: false
   normalization: InstanceNorm++
   nonlinearity: swish
-  ngf: 32
+  ngf: 96
   ch_mult: 
     - 1
     - 2
-    - 2
-    - 2
+    - 3
+    - 4
   num_res_blocks: 2 # 8 for traditional
   attn_resolutions: 
     - 8
     - 16
     - 32 # can use only 16 for traditional
-  n_head_channels: 64 # -1 for traditional
+  n_head_channels: 96 # -1 for traditional
   conditional: true
   noise_in_cond: false
   output_all_frames: false # could be useful especially for 3d models
