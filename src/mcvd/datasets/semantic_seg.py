@@ -51,6 +51,53 @@ class SegmentationMaskDataset(Dataset):
         return all_frame_mask, torch.tensor(1) # return dummy one as target
 
 
+class ElevenVsOneFramePredDatasets(Dataset):
+    def __init__(self, root_dir, split = 'train', mode = 'lst', tranforms = None):
+        self.map_idx_image_folder = []
+        self.mode = mode
+        self.data_dir = os.path.join(root_dir, split)
+        self.split = split
+         self.per_vid_data_len = 11
+        self.transforms = tranforms
+        for v in os.listdir(self.data_dir):
+            if os.path.isdir(os.path.join(self.data_dir, v)):
+                self.map_idx_image_folder.append(os.path.join(self.data_dir, v))
+    
+    def __len__(self):
+        if self.mode == 'last':
+            return len(self.map_idx_image_folder  )
+        return len(self.map_idx_image_folder  ) * self.per_vid_data_len
+    
+    def __getitem__(self, idx):
+        # if self.split == "train": # return initital 11 frame only
+        video_num = idx // self.per_vid_data_len
+        start_idx = idx % self.per_vid_data_len
+        if self.mode == 'last':
+            video_num = idx
+            start_idx = 0
+        
+        req_image_idx= [start_idx + i for i in range(0,11)]
+
+        if self.mode == 'last':
+            req_image_idx.append(21)
+        else:
+            req_image_idx.append(start_idx + 11) # add 12 th frame
+
+        images = []
+
+        for i in req_image_idx:
+            img_path = os.path.join(self.map_idx_image_folder[idx], f"image_{i}.png" )
+            image = Image.open(img_path)
+
+            if self.transforms:
+                image = self.transforms(image)
+            images.append(image)
+
+        return torch.stack(images), torch.tensor(1)
+
+    
+
+
 class NextFramePredDatasets(Dataset):
     def __init__(self, root_dir, split = 'train', mode = '5v6', tranforms = None):
         self.map_idx_image_folder = []
