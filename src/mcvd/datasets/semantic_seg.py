@@ -53,7 +53,7 @@ class SegmentationMaskDataset(Dataset):
 
 
 class ElevenVsOneFramePredDatasets(Dataset):
-    def __init__(self, root_dir, split = 'train', mode = 'lst', tranforms = None):
+    def __init__(self, root_dir, split = 'train', mode = 'cont', tranforms = None):
         self.map_idx_image_folder = []
         self.mode = mode
         self.data_dir = os.path.join(root_dir, split)
@@ -85,16 +85,19 @@ class ElevenVsOneFramePredDatasets(Dataset):
             req_image_idx.append(start_idx + 11) # add 12 th frame
 
         images = []
-
+        pattern = re.compile(r'video_(\d+)$')
+        #video_number = int(match.group(1))
+        match = pattern.search(self.map_idx_image_folder[video_num])
+        video_number = int(match.group(1))
         for i in req_image_idx:
-            img_path = os.path.join(self.map_idx_image_folder[idx], f"image_{i}.png" )
+            img_path = os.path.join(self.map_idx_image_folder[video_num], f"image_{i}.png" )
             image = Image.open(img_path)
 
             if self.transforms:
                 image = self.transforms(image)
             images.append(image)
 
-        return torch.stack(images), torch.tensor(1)
+        return torch.stack(images), torch.tensor(video_number)
 
     
 
