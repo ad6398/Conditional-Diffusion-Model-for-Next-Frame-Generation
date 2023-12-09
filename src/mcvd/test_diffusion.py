@@ -155,7 +155,7 @@ def predict_one_frame_autoregressive(data_path, ckpt_path, start, end, output_di
         # print("pred shape", pred.shape)
         last_frame = inverse_data_transform(config, last_frame)
         # print("last fram shape", last_frame.shape)
-        out_folder_name = os.path.join(output_dir, f"11v1-cont-{}-{}-val-pred".format(start, end))
+        out_folder_name = os.path.join(output_dir, f"11v1-cont-{start}-{end}-val-pred")
         if not os.path.exists(out_folder_name):
           os.mkdir(out_folder_name)
         for idx in range(video_num.shape[0]):
