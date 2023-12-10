@@ -148,3 +148,6 @@ def predict_one_frame_autoregressive(data_path, ckpt_path, start, end, output_di
           print(f"Saved last frame of video {int(video_num[idx])} to {os.path.join(out_folder_name,filename)}")
 
         # return real, last_frame, pred, video_num
+
+
+predict_one_frame_autoregressive(data_path= "/scratch/ak11089/final-project/raw-data-1/",ckpt_path= "/scratch/ak11089/final-project/next-frame-big-11v-1-cont/logs/checkpoint_27500.pt", start= 15000,end= 15001,output_dir="/scratch/ak11089/final-project//hidden-out/")
