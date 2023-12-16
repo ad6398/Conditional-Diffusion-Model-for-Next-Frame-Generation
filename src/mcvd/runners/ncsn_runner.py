@@ -205,7 +205,7 @@ class NCSNRunner():
         args.log_sample_path = os.path.join(args.log_path, 'samples')
         os.makedirs(args.log_sample_path, exist_ok=True)
         self.get_mode()
-        self.wandb_run = wandb.init(project= "DL-next-fram-5v6", config = self.config )
+        self.wandb_run = wandb.init(project= "DL-next-fram-11v11", config = self.config )
 
     def get_mode(self):
         self.condf, self.condp = self.config.data.num_frames_cond, getattr(self.config.data, "prob_mask_cond", 0.0)

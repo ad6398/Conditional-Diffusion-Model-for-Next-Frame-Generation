@@ -78,7 +78,7 @@ def predict_one_frame_autoregressive(data_path, ckpt_path, start, end, output_di
                 transforms.Resize((config.data.image_size, config.data.image_size)),
                 transforms.ToTensor()
             ])
-    test_dataset = TestElevenVsOneFramePredDatasets(root_dir=data_path, start= start, end = end, split= 'hidden', tranforms= test_transform )
+    test_dataset = TestElevenVsOneFramePredDatasets(root_dir=data_path, start= start, end = end, split= 'val', tranforms= test_transform )
     print("Test data size",test_dataset.__len__())
     num_frames_pred = config.sampling.num_frames_pred
     test_loader = DataLoader(test_dataset, batch_size=25, shuffle=False,
@@ -154,4 +154,4 @@ def predict_one_frame_autoregressive(data_path, ckpt_path, start, end, output_di
 if __name__ == "__main__":
     start = int(sys.argv[1])
     end = int(sys.argv[2])
-    predict_one_frame_autoregressive(data_path= "/scratch/ak11089/final-project/raw-data-1/",ckpt_path= "/scratch/ak11089/final-project/next-frame-big-11v-1-cont/logs/checkpoint_27500.pt", start= start,end= end,output_dir="/scratch/ak11089/final-project//hidden-out/")
+    predict_one_frame_autoregressive(data_path= "/scratch/ak11089/final-project/raw-data-1/dataset",ckpt_path= "/scratch/ak11089/final-project/next-frame-big-11v-1-cont/logs/checkpoint_27500.pt", start= start,end= end,output_dir="/scratch/ak11089/final-project//hidden-out/")

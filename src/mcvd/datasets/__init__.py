@@ -80,7 +80,7 @@ def get_dataset(data_path, config, video_frames_pred=0, start_at=0):
         test_dataset = NextFramePredDatasets(root_dir= data_path, split= 'val', mode= mode, tranforms= test_transform)
 
     elif config.data.dataset == 'ElevenVsOneFramePredDatasets':
-        mode = "cont"
+        mode = "last"
 
         train_transform = transforms.Compose([
             transforms.Resize((config.data.image_size, config.data.image_size)),

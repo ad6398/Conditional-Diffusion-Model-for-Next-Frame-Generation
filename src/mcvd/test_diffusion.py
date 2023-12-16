@@ -31,7 +31,7 @@ class TestElevenVsOneFramePredDatasets(Dataset):
                 pattern = re.compile(r'video_(\d+)$')
                 match = pattern.search(v)
                 video_number = int(match.group(1))
-                if video_number not in ignore_list and video_number < end and video_number >=start:
+                if video_number < end and video_number >=start:
                   self.map_idx_image_folder.append(os.path.join(self.data_dir, v))
 
         
@@ -79,7 +79,7 @@ def predict_one_frame_autoregressive(data_path, ckpt_path, start, end, output_di
                 transforms.Resize((config.data.image_size, config.data.image_size)),
                 transforms.ToTensor()
             ])
-    test_dataset = TestElevenVsOneFramePredDatasets(root_dir=data_path, start= start, end = end, split= 'val', tranforms= test_transform )
+    test_dataset = TestElevenVsOneFramePredDatasets(root_dir=data_path, start= start, end = end, split= 'hidden', tranforms= test_transform )
     num_frames_pred = config.sampling.num_frames_pred
     test_loader = DataLoader(test_dataset, batch_size=25, shuffle=False,
                          num_workers=config.data.num_workers, drop_last=False)
@@ -164,3 +164,6 @@ def predict_one_frame_autoregressive(data_path, ckpt_path, start, end, output_di
           print(f"Saved last frame of video {int(video_num[idx])} to {os.path.join(out_folder_name,filename)}")
 
         # return real, last_frame, pred, video_num
+
+#predict_one_frame_autoregressive(data_path= , ckpt_path, start, end, output_dir)
+predict_one_frame_autoregressive(data_path= "/scratch/ak11089/final-project/raw-data-1/",ckpt_path= "/scratch/ak11089/final-project/next-frame-big-11v-1-cont/logs/checkpoint_27500.pt", start= 15000,end= 15027,output_dir="/scratch/ak11089/final-project//hidden-out/")

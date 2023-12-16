@@ -80,7 +80,8 @@ class ElevenVsOneFramePredDatasets(Dataset):
         req_image_idx= [start_idx + i for i in range(0,11)]
 
         if self.mode == 'last':
-            req_image_idx.append(21)
+            #req_image_idx.append(21)
+            req_image_idx= [start_idx + i for i in range(0,22)]
         else:
             req_image_idx.append(start_idx + 11) # add 12 th frame
 
