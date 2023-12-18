@@ -30,6 +30,7 @@
 	
  	`PRED_PATH`: path of the folder created inside `OUT_DIR` in step.
 
+ 	`example: python Deep-Learning-Project-Fall-23/src/run_segmentation.py  Unet/unet-test/unet1.pt final_pred_hidden/all/`
 This step will generate .pt file containing our prediction. 
 
 
