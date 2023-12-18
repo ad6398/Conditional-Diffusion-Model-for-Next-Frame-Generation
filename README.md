@@ -25,9 +25,12 @@
 	example: `python Deep-Learning-Project-Fall-23/src/mcvd/test_diffusion_hidden.py  raw-data-1/ /scratch/ak11089/final-project/next-frame-big-11v-1-cont/logs/checkpoint_27500.pt /scratch/ak11089/final-project/`
 
 4. Now we need to use our trained Unet model to generate segmentation of predicted frames in step 3. To do so run `python Deep-Learning-Project-Fall-23/src/run_segmentation.py UNET_PATH, PRED_PATH` where:
+
 	`UNET_PATH`: path to unet checkpoint created in step 2
-	`PRED_PATH`: path of the folder created inside `OUT_DIR` in step 3. 
-	This step will generate .pt file containing our prediction. 
+	
+ 	`PRED_PATH`: path of the folder created inside `OUT_DIR` in step.
+
+This step will generate .pt file containing our prediction. 
 
 
 
