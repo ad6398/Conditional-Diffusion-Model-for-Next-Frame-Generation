@@ -180,7 +180,7 @@ if __name__ == "__main__":
     # }
 
     # wandb.init(project='unet-seg', config=cfg)
-    data_path = int(sys.argv[1])
+    data_path = sys.argv[1]
     
     train_set_path = os.path.join(data_path,'train/video_') #Change this to your train set path
     val_set_path = os.path.join(data_path,'val/video_') #Change this to your validation path

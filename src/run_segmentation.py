@@ -3,7 +3,7 @@ import torch
 import imageio.v3 as iio
 import numpy as np
 import matplotlib.pyplot as plt
-from main import SegmentationDataSet,encoding_block,unet_model
+from Unet.train import SegmentationDataSet,encoding_block,unet_model
 #from main_unet3 import SegData,EncodingBlock,unet_model
 import torch
 import torch
@@ -39,8 +39,8 @@ class PredictedImageDataset(Dataset):
         #print(self.images[idx])
         pattern = re.compile(r'pred_(\d+)$')
         match = pattern.search(self.images[idx])
-        #print(self.images[idx][-8:-4])
-        video_number = int(self.images[idx][-8:-4])
+        #print(self.images[idx][-9:-4])
+        video_number = int(self.images[idx][-9:-4])
         #print(video_number)
         
         if self.transform:
@@ -113,7 +113,8 @@ def predict(ckpt, data_path):
         with torch.no_grad():
             output = model(image)
             preds = torch.argmax(output, axis=1)
-        print(preds.shape)
+        #print(preds.shape)
+        #print(video_number)
         for j in range(video_number.shape[0]):
             results[video_number[j].item()] = preds[j].unsqueeze(0)
 
@@ -128,13 +129,13 @@ def save_results_pt(result):
     idx = 0
     res_list = []
     for vn in video_nums:
-        print(vn)
+        #print(vn)
         assert vn == start, f"{start} is not present in your prediction"
         pred = result[vn]
         res_list.append(pred.to("cpu"))
         start += 1
 
-    print("total dp", start)
+    #print("total dp", start)
     assert start == 17000
     result_tensor = torch.concat(res_list, dim = 0)
     print("tensor final shape",result_tensor.shape)
@@ -143,10 +144,10 @@ def save_results_pt(result):
 
 if __name__ == "__main__":
     
-    unet_path = int(sys.argv[1])
-    diffusion_pred = int(sys.argv[2])
-	r = predict(unet_path,diffusion_pred )
-	save_results_pt(r)
+    unet_path = sys.argv[1]
+    diffusion_pred = sys.argv[2]
+    r = predict(unet_path,diffusion_pred )
+    save_results_pt(r)
 
 # r = predict(unet_model_saved_path,"/scratch/ak11089/final-project//final_pred_hidden/all/" )
 # save_results_pt(r)
