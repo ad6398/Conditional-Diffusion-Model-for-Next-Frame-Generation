@@ -1,0 +1,16 @@
+# conda install pytorch torchvision torchaudio cudatoolkit=11.3 -c pytorch
+numpy
+PyYAML
+imageio
+imageio-ffmpeg
+matplotlib
+opencv-python
+scikit-image
+tqdm
+h5py
+progressbar
+psutil
+torch==2.0.1
+torchaudio==2.0.2
+torchvision==0.15.2
+ninja
