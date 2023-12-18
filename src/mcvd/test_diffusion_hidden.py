@@ -69,7 +69,7 @@ class TestElevenVsOneFramePredDatasets(Dataset):
 def stretch_image(X, ch, imsize):
     return X.reshape(len(X), -1, ch, imsize, imsize).permute(0, 2, 1, 4, 3).reshape(len(X), ch, -1, imsize).permute(0, 1, 3, 2)
 
-def predict_one_frame_autoregressive(data_path, ckpt_path, start, end, output_dir):
+def predict_one_frame_autoregressive(data_path, ckpt_path, start, end, output_dir, split):
     device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
     scorenet, config = load_model(ckpt_path, device)
         # wandb_run = wandb.init(project= "DL-next-fram-11v1-test", config = config )
@@ -152,6 +152,18 @@ def predict_one_frame_autoregressive(data_path, ckpt_path, start, end, output_di
 
 #predict_one_frame_autoregressive(data_path= "/scratch/ak11089/final-project/raw-data-1/",ckpt_path= "/scratch/ak11089/final-project/next-frame-big-11v-1-cont/logs/checkpoint_27500.pt", start= 15000,end= 15050,output_dir="/scratch/ak11089/final-project//hidden-out/")
 if __name__ == "__main__":
-    start = int(sys.argv[1])
-    end = int(sys.argv[2])
-    predict_one_frame_autoregressive(data_path= "/scratch/ak11089/final-project/raw-data-1/dataset",ckpt_path= "/scratch/ak11089/final-project/next-frame-big-11v-1-cont/logs/checkpoint_27500.pt", start= start,end= end,output_dir="/scratch/ak11089/final-project//hidden-out/")
+    
+    dp = int(sys.argv[1])
+    ckpt = int(sys.argv[2])
+    out = int(sys.argv[3])
+    split = 'hidden'
+    if split == 'hidden':
+        start = 15000
+        end = 17000
+    predict_one_frame_autoregressive(data_path= dp,ckpt_path= ckpt, start= start,end= end,output_dir=out)
+
+
+
+# predict_one_frame_autoregressive(data_path= "/scratch/ak11089/final-project/raw-data-1/dataset",ckpt_path= "/scratch/ak11089/final-project/next-frame-big-11v-1-cont/logs/checkpoint_27500.pt", start= start,end= end,output_dir="/scratch/ak11089/final-project//hidden-out/")
+
+

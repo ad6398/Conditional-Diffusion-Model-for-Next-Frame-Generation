@@ -1,12 +1,12 @@
 training:
   L1: false
-  batch_size: 24
+  batch_size: 12
   n_epochs: 10000
   n_iters: 3000001
-  snapshot_freq: 100
-  snapshot_sampling: true
-  sample_freq: 100
-  val_freq: 100
+  snapshot_freq: 800
+  snapshot_sampling: false
+  sample_freq: 800
+  val_freq: 800
   log_freq: 50
   log_all_sigmas: false
 
