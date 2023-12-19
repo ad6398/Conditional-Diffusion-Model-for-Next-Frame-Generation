@@ -3,8 +3,7 @@ import torch
 import imageio.v3 as iio
 import numpy as np
 import matplotlib.pyplot as plt
-from Unet.train import SegmentationDataSet,encoding_block,unet_model
-#from main_unet3 import SegData,EncodingBlock,unet_model
+from Unet.train import SegData,EncodingBlock,unet_model
 import torch
 import torch
 from torch.utils.data import Dataset, DataLoader
