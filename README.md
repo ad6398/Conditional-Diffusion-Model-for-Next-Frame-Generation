@@ -1,4 +1,4 @@
-# Conditional-Diffusion-Model-for-Next-Frame-Generation
+# Conditional Diffusion Model for Next Frame Generation
 For final competition held in class of Deep Learning, fall - 2024, taught by Prof Yann LeCun & Alfredo Canziani. 
 
 ## Problem Statement
