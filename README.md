@@ -1,4 +1,11 @@
-# Deep-Learning-Project-Fall-23
+# Conditional-Diffusion-Model-for-Next-Frame-Generation
+For final competition held in class of Deep Learning, fall - 2024, taught by Prof Yann LeCun & Alfredo Canziani. 
+
+## Problem Statement
+
+Given 11 frames of videos, where simple 3D shapes interact with each other according to basic physics principles, predict 22nd frame along with its semantic segmentation.
+
+
 
 ## Training Diffusion model
 
